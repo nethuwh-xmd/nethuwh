@@ -541,6 +541,52 @@ const commandHandlers = {
         });
     },
 
+case 'song': {
+    if (!args.join(" ")) 
+        return sock.sendMessage(from, { text: "👉 Song name denna\n\nExample: .song Believer" }, { quoted: msg });
+
+    const search = args.join(" ");
+    try {
+        let { data } = await axios.get(`https://api.akuari.my.id/downloader/ytplay?query=${encodeURIComponent(search)}`);
+
+        if (data.result && data.result.url) {
+            await sock.sendMessage(
+                from,
+                {
+                    audio: { url: data.result.url },
+                    mimetype: "audio/mpeg",
+                    fileName: search + ".mp3",
+                    contextInfo: {
+                        externalAdReply: {
+                            title: `🎶 ${search}`,
+                            body: "Powered by NETHUWH Mini Bot",
+                            mediaType: 2,
+                            thumbnailUrl: "https://i.ibb.co/bR26QxBS/70285ba0b204407c.jpg",
+                            sourceUrl: "https://whatsapp.com/channel/0029VaABcdS2Q1sPFO8T2Y0k"
+                        }
+                    }
+                },
+                { quoted: msg }
+            );
+
+            // ➕ Return Menu Button
+            await sock.sendMessage(from, {
+                text: "✅ Song Download Complete!\n\n🔙 Press below to go back to menu.",
+                buttons: [
+                    { buttonId: "menu", buttonText: { displayText: "🏠 Return Menu" }, type: 1 }
+                ],
+                headerType: 1
+            }, { quoted: msg });
+
+        } else {
+            await sock.sendMessage(from, { text: "❌ Song not found (API error)" }, { quoted: msg });
+        }
+    } catch (e) {
+        await sock.sendMessage(from, { text: "❌ Error: Song API fail." }, { quoted: msg });
+    }
+}
+break;
+    
     ping: async (socket, sender, msg) => {
         var inital = new Date().getTime();
         let pingMsg = await socket.sendMessage(sender, { text: '*_Pinging to 𝗡𝗘𝗧𝗛𝗨𝗪𝗛 𝗫𝗠𝗗 🪢 Module..._* ❗' });
