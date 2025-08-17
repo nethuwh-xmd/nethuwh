@@ -541,7 +541,7 @@ const commandHandlers = {
         });
     },
 
-case 'song': {
+case 'song88': {
     if (!args.join(" ")) 
         return sock.sendMessage(from, { text: "👉 Song name denna\n\nExample: .song Believer" }, { quoted: msg });
 
